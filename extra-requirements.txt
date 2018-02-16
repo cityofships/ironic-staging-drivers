@@ -1,1 +1,1 @@
-git+https://opendev.org/openstack/ironic#egg=ironic
+git+https://opendev.org/openstack/ironic@stable/train#egg=ironic
