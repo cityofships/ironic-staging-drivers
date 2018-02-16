@@ -24,7 +24,7 @@
     vars:
       rtd_webhook_id: '44747'
     templates:
-      - openstack-python3-xena-jobs
+      - openstack-python3-yoga-jobs
       - docs-on-readthedocs
       - check-requirements
     check:
