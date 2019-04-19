@@ -11,9 +11,9 @@
       - ^releasenotes/.*$
       - ^ironic-staging-drivers/tests/.*$
     required-projects:
-      - openstack-infra/devstack-gate
+      - openstack/devstack-gate
       - openstack/ironic
-      - openstack/ironic-staging-drivers
+      - x/ironic-staging-drivers
 
 - project:
     vars:
