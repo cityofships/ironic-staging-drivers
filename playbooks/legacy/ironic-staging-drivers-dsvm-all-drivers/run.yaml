@@ -13,12 +13,12 @@
           set -x
           cat > clonemap.yaml << EOF
           clonemap:
-            - name: openstack-infra/devstack-gate
+            - name: openstack/devstack-gate
               dest: devstack-gate
           EOF
           /usr/zuul-env/bin/zuul-cloner -m clonemap.yaml --cache-dir /opt/git \
-              https://git.openstack.org \
-              openstack-infra/devstack-gate
+              https://opendev.org \
+              openstack/devstack-gate
         executable: /bin/bash
         chdir: '{{ ansible_user_dir }}/workspace'
       environment: '{{ zuul | zuul_legacy_vars }}'
@@ -29,8 +29,8 @@
           set -x
           cat << 'EOF' >>"/tmp/dg-local.conf"
           [[local|localrc]]
-          enable_plugin ironic https://git.openstack.org/openstack/ironic
-          enable_plugin ironic-staging-drivers https://git.openstack.org/openstack/ironic-staging-drivers
+          enable_plugin ironic https://opendev.org/openstack/ironic
+          enable_plugin ironic-staging-drivers https://opendev.org/x/ironic-staging-drivers
           IRONIC_BUILD_DEPLOY_RAMDISK=False
 
           EOF
@@ -48,7 +48,7 @@
           export DEVSTACK_GATE_VIRT_DRIVER=ironic
           export BRANCH_OVERRIDE=default
           export PROJECTS="openstack/ironic $PROJECTS"
-          export PROJECTS="openstack/ironic-staging-drivers $PROJECTS"
+          export PROJECTS="x/ironic-staging-drivers $PROJECTS"
           if [ "$BRANCH_OVERRIDE" != "default" ] ; then
               export OVERRIDE_ZUUL_BRANCH=$BRANCH_OVERRIDE
           fi

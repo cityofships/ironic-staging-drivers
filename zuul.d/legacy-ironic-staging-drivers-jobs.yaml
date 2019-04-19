@@ -8,9 +8,9 @@
       - ^releasenotes/.*$
       - ^ironic-staging-drivers/tests/.*$
     required-projects:
-      - openstack-infra/devstack-gate
+      - openstack/devstack-gate
       - openstack/ironic
-      - openstack/ironic-staging-drivers
+      - x/ironic-staging-drivers
 
 - job:
     name: ironic-staging-drivers-dsvm-all-drivers
@@ -28,7 +28,7 @@
     required-projects:
       - openstack/ironic-lib
       - openstack/ironic-python-agent
-      - openstack/pyghmi
+      - x/pyghmi
       - openstack/python-ironicclient
       - openstack/tempest
       - openstack/virtualbmc

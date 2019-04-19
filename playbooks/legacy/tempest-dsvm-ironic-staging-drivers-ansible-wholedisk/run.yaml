@@ -14,12 +14,12 @@
           set -x
           cat > clonemap.yaml << EOF
           clonemap:
-            - name: openstack-infra/devstack-gate
+            - name: openstack/devstack-gate
               dest: devstack-gate
           EOF
           /usr/zuul-env/bin/zuul-cloner -m clonemap.yaml --cache-dir /opt/git \
-              https://git.openstack.org \
-              openstack-infra/devstack-gate
+              https://opendev.org \
+              openstack/devstack-gate
         executable: /bin/bash
         chdir: '{{ ansible_user_dir }}/workspace'
       environment: '{{ zuul | zuul_legacy_vars }}'
@@ -53,8 +53,8 @@
     - shell:
         cmd: |
           cat << 'EOF' >> ironic-extra-vars
-            export PROJECTS="openstack/ironic-staging-drivers $PROJECTS"
-          export DEVSTACK_LOCAL_CONFIG+=$'\n'"enable_plugin ironic-staging-drivers https://git.openstack.org/openstack/ironic-staging-drivers"
+            export PROJECTS="x/ironic-staging-drivers $PROJECTS"
+          export DEVSTACK_LOCAL_CONFIG+=$'\n'"enable_plugin ironic-staging-drivers https://opendev.org/x/ironic-staging-drivers"
 
           EOF
         chdir: '{{ ansible_user_dir }}/workspace'
@@ -97,7 +97,7 @@
           export PROJECTS="openstack/ironic-lib $PROJECTS"
           export PROJECTS="openstack/ironic-python-agent $PROJECTS"
           export PROJECTS="openstack/python-ironicclient $PROJECTS"
-          export PROJECTS="openstack/pyghmi $PROJECTS"
+          export PROJECTS="x/pyghmi $PROJECTS"
           export PROJECTS="openstack/virtualbmc $PROJECTS"
           export PROJECTS="openstack/ironic-tempest-plugin $PROJECTS"
           export PYTHONUNBUFFERED=true
