@@ -200,7 +200,7 @@ class IntelNMVendorPassthru(base.VendorInterface):
             if (kwargs['parameter_name'] not in
                 nm_commands.STATISTICS[kwargs['scope']]):
                     raise exception.InvalidParameterValue(
-                        _('Invalid parameter name %(param)% for scope '
+                        _('Invalid parameter name %(param)s for scope '
                           '%(scope)s') % {'param': kwargs['parameter_name'],
                                           'scope': kwargs['scope']})
 
