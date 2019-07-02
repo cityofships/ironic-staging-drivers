@@ -45,7 +45,7 @@ How do I submit the code?
 
 #. Get the code::
 
-     git clone https://git.openstack.org/openstack/ironic-staging-drivers
+     git clone https://opendev.org/x/ironic-staging-drivers
 
 #. Make your changes and write a nice commit message explaining the
    change in details.
@@ -58,5 +58,5 @@ Useful links
 
 * Free software: Apache license
 * Documentation: http://ironic-staging-drivers.readthedocs.io/en/latest/
-* Source: http://git.openstack.org/cgit/openstack/ironic-staging-drivers
+* Source: https://opendev.org/x/ironic-staging-drivers
 * Bugs: https://storyboard.openstack.org/#!/project/950
