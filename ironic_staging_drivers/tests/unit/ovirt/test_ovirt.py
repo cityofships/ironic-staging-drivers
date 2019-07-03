@@ -21,6 +21,7 @@ from ironic.conductor import task_manager
 from ironic.tests.unit.db import base as db_base
 from ironic.tests.unit.objects import utils as obj_utils
 import mock
+import six
 
 from ironic_staging_drivers.ovirt import ovirt as ovirt_power
 
@@ -64,11 +65,11 @@ class OVirtDriverTestCase(db_base.DbTestCase):
         ovirt_power._getvm(driver_info)
         ovirt_power.sdk.Connection.assert_called_with(
             ca_file=None, insecure='False', password='changeme',
-            url=b'https://127.0.0.1/ovirt-engine/api',
+            url='https://127.0.0.1/ovirt-engine/api',
             username='jhendrix@internal'
         )
         url = ovirt_power.sdk.Connection.mock_calls[0][-1]['url']
-        self.assertEqual(type(b''), type(url))
+        self.assertIsInstance(url, six.string_types)
 
     @mock.patch.object(ovirt_power, "sdk", create=True)
     def test_getvm_unicode(self, sdk):
@@ -82,7 +83,7 @@ class OVirtDriverTestCase(db_base.DbTestCase):
             username='jhendrix@internal'
         )
         url = ovirt_power.sdk.Connection.mock_calls[0][-1]['url']
-        self.assertEqual(type(u''), type(url))
+        self.assertIsInstance(url, six.text_type)
 
     def test_get_properties(self):
         expected = list(ovirt_power.PROPERTIES.keys())

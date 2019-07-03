@@ -19,7 +19,6 @@ via oVirt sdk API.
 
 For use in dev and test environments.
 """
-
 from ironic.common import boot_devices
 from ironic.common import exception
 from ironic.common.i18n import _
@@ -29,6 +28,7 @@ from ironic.drivers import base
 from oslo_config import cfg
 from oslo_log import log as logging
 from oslo_utils import importutils
+import six
 
 from ironic_staging_drivers.common import exception as staging_exception
 
@@ -130,17 +130,18 @@ def _getvm(driver_info):
     password = driver_info['ovirt_password']
     insecure = driver_info['ovirt_insecure']
     ca_file = driver_info['ovirt_ca_file']
-    name = driver_info['ovirt_vm_name'].encode('ascii', 'ignore')
+    name = six.ensure_str(
+        driver_info['ovirt_vm_name'], encoding='ascii', errors='ignore')
     url = "https://%s/ovirt-engine/api" % address
     try:
-        # pycurl.Curl.setopt doesn't support unicode stings
-        # convert them to a acsii str
-        url = url.encode('ascii', 'strict')
+        # pycurl.Curl.setopt doesn't support unicode strings,
+        # attempt to turn `url` into an all-ASCII string
+        url = six.ensure_str(url, encoding='ascii', errors='strict')
+
     except UnicodeEncodeError:
-        # url contains unicode characters that can't be converted, attempt to
-        # use it, if we have a version of pycurl that rejects it then a
-        # sdk.Error will be thrown below
-        pass
+        LOG.warning("oVirt URL '%(url)s' contains non-ascii characters, "
+                    "that might cause pycurl to explode "
+                    "momentarily", {'url': url})
 
     try:
         connection = sdk.Connection(url=url, username=username,
