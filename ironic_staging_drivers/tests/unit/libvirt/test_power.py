@@ -231,7 +231,7 @@ class LibvirtPrivateMethodsTestCase(BaseLibvirtTest):
     @mock.patch.object(power, '_get_libvirt_connection',
                        return_value=FakeConnection())
     def test__get_domain_by_macs(self, libvirt_conn_mock):
-        self.config(enabled_drivers=["staging-libvirt"])
+        self.config(enabled_hardware_types=['staging-libvirt'])
         node = obj_utils.create_test_node(
             self.context,
             driver='staging-libvirt',
@@ -249,7 +249,7 @@ class LibvirtPrivateMethodsTestCase(BaseLibvirtTest):
     @mock.patch.object(power, '_get_libvirt_connection',
                        return_value=FakeConnection())
     def test__get_domain_by_macs_not_found(self, libvirt_conn_mock):
-        self.config(enabled_drivers=["staging-libvirt"])
+        self.config(enabled_hardware_types=['staging-libvirt'])
         node = obj_utils.create_test_node(
             self.context,
             driver='staging-libvirt',
