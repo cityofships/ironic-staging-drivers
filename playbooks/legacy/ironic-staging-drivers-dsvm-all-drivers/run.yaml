@@ -47,9 +47,11 @@
           export DEVSTACK_GATE_NEUTRON=1
           export DEVSTACK_GATE_VIRT_DRIVER=ironic
           export DEVSTACK_GATE_IRONIC_DRIVER=ipmi
+          export DEVSTACK_GATE_USE_PYTHON3=True
           export BRANCH_OVERRIDE=default
           export PROJECTS="openstack/ironic $PROJECTS"
           export PROJECTS="x/ironic-staging-drivers $PROJECTS"
+          export PROJECTS="openstack/ironic-python-agent-builder $PROJECTS"
           if [ "$BRANCH_OVERRIDE" != "default" ] ; then
               export OVERRIDE_ZUUL_BRANCH=$BRANCH_OVERRIDE
           fi
