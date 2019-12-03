@@ -27,7 +27,6 @@ from oslo_config import cfg
 from oslo_log import log as logging
 from oslo_service import loopingcall
 from oslo_utils import importutils
-import six
 
 from ironic_staging_drivers.common.i18n import _
 from ironic_staging_drivers.common import utils
@@ -114,8 +113,8 @@ def _parse_driver_info(node):
 def _get_connection(driver_info):
     # NOTE: python-iboot wants username and password as strings (not unicode)
     return iboot.iBootInterface(driver_info['address'],
-                                six.binary_type(driver_info['username']),
-                                six.binary_type(driver_info['password']),
+                                bytes(driver_info['username']),
+                                bytes(driver_info['password']),
                                 port=driver_info['port'],
                                 num_relays=driver_info['relay_id'])
 

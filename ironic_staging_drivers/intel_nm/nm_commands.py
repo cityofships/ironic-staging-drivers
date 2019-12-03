@@ -13,11 +13,11 @@
 import binascii
 import collections
 import datetime
+import functools
 import struct
 
 from ironic.common import exception as ironic_exception
 from oslo_log import log
-import six
 
 from ironic_staging_drivers.common import exception
 from ironic_staging_drivers.common.i18n import _
@@ -146,7 +146,7 @@ _INIT_TIMESTAMP_MAX = 0x20000000
 
 def _handle_parsing_error(func):
     """Decorator for handling errors in raw output data."""
-    @six.wraps(func)
+    @functools.wraps(func)
     def wrapper(raw_data):
         msg = _('Data from Intel Node Manager %s')
 
@@ -504,7 +504,7 @@ def parse_statistics(raw_data):
         # there is not "bad time" in standard, reset to start the epoch
         statistics['timestamp'] = _INVALID_TIME
         LOG.warning('Invalid timestamp in Node Nanager statistics '
-                    'data: %s', six.text_type(e))
+                    'data: %s', str(e))
     else:
         statistics['timestamp'] = isotime
 
@@ -534,8 +534,7 @@ def parse_slave_and_channel(file_path):
     with open(file_path, 'rb') as bin_fp:
         data_str = binascii.hexlify(bin_fp.read())
 
-    if six.PY3:
-        data_str = data_str.decode()
+    data_str = data_str.decode()
     oem_id_index = data_str.find(prefix)
     if oem_id_index != -1:
         ret = data_str[oem_id_index + len(prefix):

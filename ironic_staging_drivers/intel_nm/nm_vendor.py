@@ -22,7 +22,6 @@ from jsonschema import exceptions as json_schema_exc
 from oslo_config import cfg
 from oslo_log import log
 from oslo_utils import excutils
-import six
 
 from ironic_staging_drivers.common.i18n import _
 from ironic_staging_drivers.intel_nm import nm_commands
@@ -115,7 +114,7 @@ def _execute_nm_command(task, data, command_func, parse_func=None):
         with excutils.save_and_reraise_exception():
             LOG.exception('Can not obtain Intel Node Manager address for '
                           'node %(node)s: %(err)s',
-                          {'node': task.node.uuid, 'err': six.text_type(e)})
+                          {'node': task.node.uuid, 'err': str(e)})
     driver_info = task.node.driver_info
     driver_info['ipmi_bridging'] = 'single'
     driver_info['ipmi_target_channel'] = channel
@@ -129,7 +128,7 @@ def _execute_nm_command(task, data, command_func, parse_func=None):
             with excutils.save_and_reraise_exception():
                 LOG.exception('Error in returned data for node %(node)s: '
                               '%(err)s', {'node': task.node.uuid,
-                                          'err': six.text_type(e)})
+                                          'err': str(e)})
 
 
 class IntelNMVendorPassthru(base.VendorInterface):

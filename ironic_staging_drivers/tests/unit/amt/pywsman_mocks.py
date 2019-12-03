@@ -21,11 +21,11 @@ respective external libraries' actually being present.
 
 """
 
+import importlib
 import sys
 
 import mock
 from oslo_utils import importutils
-import six
 
 from ironic_staging_drivers.tests.unit.amt import pywsman_mocks_specs
 
@@ -38,4 +38,4 @@ if not pywsman:
     # Now that the external library has been mocked, if anything had already
     # loaded any of the drivers, reload them.
     if 'ironic_staging_drivers.amt' in sys.modules:
-        six.moves.reload_module(sys.modules['ironic_staging_drivers.amt'])
+        importlib.reload(sys.modules['ironic_staging_drivers.amt'])

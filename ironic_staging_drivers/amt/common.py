@@ -23,7 +23,6 @@ from oslo_concurrency import processutils
 from oslo_config import cfg
 from oslo_log import log as logging
 from oslo_utils import importutils
-import six
 
 from ironic_staging_drivers.common import exception
 from ironic_staging_drivers.common.i18n import _
@@ -98,7 +97,7 @@ class Client(object):
     def __init__(self, address, protocol, username, password):
         port = AMT_PROTOCOL_PORT_MAP[protocol]
         path = '/wsman'
-        if isinstance(protocol, six.text_type):
+        if isinstance(protocol, str):
             protocol = protocol.encode()
         self.client = pywsman.Client(address, port, path, protocol,
                                      username, password)
@@ -167,7 +166,7 @@ def parse_driver_info(node):
     for param in REQUIRED_PROPERTIES:
         value = info.get(param)
         if value:
-            if isinstance(value, six.text_type):
+            if isinstance(value, str):
                 value = value.encode()
             d_info[param[4:]] = value
         else:

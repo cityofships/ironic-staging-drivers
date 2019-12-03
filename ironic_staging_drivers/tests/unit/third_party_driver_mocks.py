@@ -25,11 +25,11 @@ Current list of mocked libraries:
 - iboot
 """
 
+import importlib
 import sys
 
 import mock
 from oslo_utils import importutils
-import six
 
 from ironic_staging_drivers.tests.unit import third_party_driver_mock_specs \
     as mock_specs
@@ -46,8 +46,7 @@ if not iboot:
 # if anything has loaded the iboot driver yet, reload it now that the
 # external library has been mocked
 if 'ironic_staging_drivers.iboot.power' in sys.modules:
-    six.moves.reload_module(
-        sys.modules['ironic_staging_drivers.iboot.power'])
+    importlib.reload(sys.modules['ironic_staging_drivers.iboot.power'])
 
 # attempt to load the external 'libvirt' library, which is required by
 # the optional drivers.modules.libvirt module
@@ -60,8 +59,7 @@ if not libvirt:
 # if anything has loaded the libvirt driver yet, reload it now that the
 # external library has been mocked
 if 'ironic_staging_drivers.libvirt.power' in sys.modules:
-    six.moves.reload_module(
-        sys.modules['ironic_staging_drivers.libvirt.power'])
+    importlib.reload(sys.modules['ironic_staging_drivers.libvirt.power'])
 
 # attempt to load the external 'ovirtsdk4' library, which is required by
 # the optional drivers.modules.ovirt module
