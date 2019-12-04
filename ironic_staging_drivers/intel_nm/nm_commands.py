@@ -504,7 +504,7 @@ def parse_statistics(raw_data):
         # there is not "bad time" in standard, reset to start the epoch
         statistics['timestamp'] = _INVALID_TIME
         LOG.warning('Invalid timestamp in Node Nanager statistics '
-                    'data: %s', str(e))
+                    'data: %s', e)
     else:
         statistics['timestamp'] = isotime
 

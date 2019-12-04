@@ -114,7 +114,7 @@ def _execute_nm_command(task, data, command_func, parse_func=None):
         with excutils.save_and_reraise_exception():
             LOG.exception('Can not obtain Intel Node Manager address for '
                           'node %(node)s: %(err)s',
-                          {'node': task.node.uuid, 'err': str(e)})
+                          {'node': task.node.uuid, 'err': e})
     driver_info = task.node.driver_info
     driver_info['ipmi_bridging'] = 'single'
     driver_info['ipmi_target_channel'] = channel
@@ -128,7 +128,7 @@ def _execute_nm_command(task, data, command_func, parse_func=None):
             with excutils.save_and_reraise_exception():
                 LOG.exception('Error in returned data for node %(node)s: '
                               '%(err)s', {'node': task.node.uuid,
-                                          'err': str(e)})
+                                          'err': e})
 
 
 class IntelNMVendorPassthru(base.VendorInterface):
