@@ -245,8 +245,8 @@ def set_policy(policy):
         policy['trigger_limit'] = 0
 
     cmd = _create_command_head(POLICY_SET)
-    _append_to_command(cmd, _hex(DOMAINS[policy['domain_id']] |
-                       0x10 if policy['enable'] else 0x00))
+    _append_to_command(cmd, _hex(DOMAINS[policy['domain_id']]
+                                 | 0x10 if policy['enable'] else 0x00))
     _append_to_command(cmd, _hex(policy['policy_id']))
     # 0x10 is policy add flag
     flags = TRIGGERS[policy['policy_trigger']]
@@ -341,10 +341,9 @@ def get_capabilities(data):
     cmd = _create_command_head(CAPABILITIES_GET)
     _append_to_command(cmd, _hex(DOMAINS[data['domain_id']]))
     power_policy = 0x10
-    _append_to_command(cmd, _hex(TRIGGERS[data['policy_trigger']] |
-                       power_policy |
-                       POWER_DOMAIN[data['power_domain']]))
-
+    _append_to_command(cmd, _hex(TRIGGERS[data['policy_trigger']]
+                                 | power_policy
+                                 | POWER_DOMAIN[data['power_domain']]))
     return cmd
 
 

@@ -114,8 +114,8 @@ class IntelNMPoliciesCommandTestCase(base.TestCase):
 
     def test_remove_policy(self):
         data = {'domain_id': 'platform', 'policy_id': 123}
-        expected = (['0x2E', '0xC1', '0x57', '0x01', '0x00', '0x00', '0x7B'] +
-                    ['0x00'] * 12)
+        expected = (['0x2E', '0xC1', '0x57', '0x01', '0x00', '0x00', '0x7B']
+                    + ['0x00'] * 12)
         result = commands.remove_policy(data)
         self.assertEqual(expected, result)
 

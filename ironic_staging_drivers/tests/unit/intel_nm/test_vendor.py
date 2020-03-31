@@ -71,8 +71,8 @@ class IntelNMPassthruTestCase(db_base.DbTestCase):
                     enabled_management_interfaces=['ipmitool'])
         self.node = obj_utils.create_test_node(self.context,
                                                driver='staging-nm')
-        self.temp_filename = os.path.join(CONF.tempdir, self.node.uuid +
-                                          '.sdr')
+        self.temp_filename = os.path.join(CONF.tempdir, self.node.uuid
+                                          + '.sdr')
 
     @mock.patch.object(ironic_utils, 'unlink_without_raise', spec_set=True,
                        autospec=True)

@@ -118,8 +118,8 @@ def _parse_driver_info(node):
     insecure = driver_info['ovirt_insecure']
     ovirt_ca_file = driver_info['ovirt_ca_file']
     if not insecure and ovirt_ca_file is None:
-            msg = _("Missing ovirt_ca_file in the node's driver_info")
-            raise exception.MissingParameterValue(msg)
+        msg = _("Missing ovirt_ca_file in the node's driver_info")
+        raise exception.MissingParameterValue(msg)
     return driver_info
 
 

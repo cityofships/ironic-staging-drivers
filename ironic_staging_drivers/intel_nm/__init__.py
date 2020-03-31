@@ -24,5 +24,5 @@ class IntelNMHardware(ipmi.IPMIHardware):
     @property
     def supported_vendor_interfaces(self):
         """List of supported vendor interfaces."""
-        return (super(IntelNMHardware, self).supported_vendor_interfaces +
-                [nm_vendor.IntelNMVendorPassthru])
+        return (super(IntelNMHardware, self).supported_vendor_interfaces
+                + [nm_vendor.IntelNMVendorPassthru])

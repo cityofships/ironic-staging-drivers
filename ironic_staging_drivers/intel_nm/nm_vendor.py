@@ -177,7 +177,7 @@ class IntelNMVendorPassthru(base.VendorInterface):
                          'communication_failures')
 
         if kwargs['scope'] == 'policy' and 'policy_id' not in kwargs:
-                raise exception.MissingParameterValue(_('Missing "policy_id"'))
+            raise exception.MissingParameterValue(_('Missing "policy_id"'))
 
         if kwargs.get('parameter_name') not in global_params:
             if 'domain_id' not in kwargs:
@@ -197,11 +197,11 @@ class IntelNMVendorPassthru(base.VendorInterface):
                     _('Parameter name is mandatory for getting statistics'))
             # valid parameters depend on scope
             if (kwargs['parameter_name'] not in
-                nm_commands.STATISTICS[kwargs['scope']]):
-                    raise exception.InvalidParameterValue(
-                        _('Invalid parameter name %(param)s for scope '
-                          '%(scope)s') % {'param': kwargs['parameter_name'],
-                                          'scope': kwargs['scope']})
+                    nm_commands.STATISTICS[kwargs['scope']]):
+                raise exception.InvalidParameterValue(
+                    _('Invalid parameter name %(param)s for scope '
+                      '%(scope)s') % {'param': kwargs['parameter_name'],
+                                      'scope': kwargs['scope']})
 
     def get_properties(self):
         """Returns the properties of the interface.."""

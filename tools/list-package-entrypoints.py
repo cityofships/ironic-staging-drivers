@@ -29,8 +29,8 @@ def filter_ep_names(eps, ep_type, skips=None, filters=None):
         filters = []
 
     def filter_func(name):
-        return (all([s not in name for s in skips]) and
-                all([f in name for f in filters]))
+        return (all([s not in name for s in skips])
+                and all([f in name for f in filters]))
 
     return filter(filter_func, list(eps.get(ep_type, {}).keys()))
 
