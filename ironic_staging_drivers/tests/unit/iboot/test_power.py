@@ -17,7 +17,6 @@
 
 import types
 
-import mock
 
 from ironic.common import exception as ironic_exception
 from ironic.common import states
@@ -25,6 +24,7 @@ from ironic.conductor import task_manager
 from ironic.drivers.modules import fake
 from ironic.tests.unit.db import base as db_base
 from ironic.tests.unit.objects import utils as obj_utils
+import mock
 
 from ironic_staging_drivers.iboot import power as iboot_power
 
