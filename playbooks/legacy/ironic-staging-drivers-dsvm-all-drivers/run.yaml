@@ -32,6 +32,7 @@
           enable_plugin ironic https://opendev.org/openstack/ironic
           enable_plugin ironic-staging-drivers https://opendev.org/x/ironic-staging-drivers
           IRONIC_BUILD_DEPLOY_RAMDISK=False
+          IRONIC_RAMDISK_TYPE=tinyipa
 
           EOF
         executable: /bin/bash
