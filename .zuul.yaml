@@ -1,8 +1,6 @@
 - job:
-    name: ironic-staging-drivers-dsvm-all-drivers
-    parent: legacy-dsvm-base
-    run: playbooks/legacy/ironic-staging-drivers-dsvm-all-drivers/run.yaml
-    post-run: playbooks/legacy/ironic-staging-drivers-dsvm-all-drivers/post.yaml
+    name: ironic-staging-drivers-all
+    parent: ironic-base
     timeout: 4800
     irrelevant-files:
       - ^test-requirements.txt$
@@ -11,10 +9,14 @@
       - ^releasenotes/.*$
       - ^ironic-staging-drivers/tests/.*$
     required-projects:
-      - openstack/devstack-gate
       - openstack/ironic
       - openstack/ironic-python-agent-builder
       - x/ironic-staging-drivers
+    vars:
+      devstack_localrc:
+        IRONIC_DEFAULT_DEPLOY_INTERFACE: ""
+      devstack_plugins:
+        ironic-staging-drivers: https://opendev.org/x/ironic-staging-drivers
 
 - project:
     vars:
@@ -26,7 +28,7 @@
       - check-requirements
     check:
       jobs:
-        - ironic-staging-drivers-dsvm-all-drivers
+        - ironic-staging-drivers-all
     gate:
       jobs:
-        - ironic-staging-drivers-dsvm-all-drivers
+        - ironic-staging-drivers-all
