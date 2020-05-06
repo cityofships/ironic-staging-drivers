@@ -19,6 +19,9 @@ via oVirt sdk API.
 
 For use in dev and test environments.
 """
+
+import contextlib
+
 from ironic.common import boot_devices
 from ironic.common import exception
 from ironic.common.i18n import _
@@ -123,6 +126,7 @@ def _parse_driver_info(node):
     return driver_info
 
 
+@contextlib.contextmanager
 def _getvm(driver_info):
     address = driver_info['ovirt_address']
     username = driver_info['ovirt_username']
@@ -149,15 +153,20 @@ def _getvm(driver_info):
                                     ca_file=ca_file)
         vms_service = connection.system_service().vms_service()
         vmsearch = vms_service.list(search='name=%s' % name)
+        if vmsearch:
+            yield vms_service.vm_service(vmsearch[0].id)
+        else:
+            raise staging_exception.OVirtError(_("VM with name "
+                                                 "%s was not found") % name)
     except sdk.Error as e:
         LOG.error("Could not fetch information about VM vm %(name)s, "
                   "got error: %(error)s", {'name': name, 'error': e})
         raise staging_exception.OVirtError(err=e)
-    if vmsearch:
-        return vms_service.vm_service(vmsearch[0].id)
-    else:
-        raise staging_exception.OVirtError(_("VM with name "
-                                             "%s was not found") % name)
+    finally:
+        try:
+            connection.close()
+        except sdk.Error as e:
+            LOG.warning("Error closing connection: %(error)s", {'error': e})
 
 
 class OVirtPower(base.PowerInterface):
@@ -188,8 +197,8 @@ class OVirtPower(base.PowerInterface):
         """
         driver_info = _parse_driver_info(task.node)
         vm_name = driver_info['ovirt_vm_name']
-        vm = _getvm(driver_info)
-        status = vm.get().status.value
+        with _getvm(driver_info) as vm:
+            status = vm.get().status.value
         if status not in OVIRT_TO_IRONIC_POWER_MAPPING:
             msg = ("oVirt returned unknown state for node %(node)s "
                    "and vm %(vm)s")
@@ -213,26 +222,27 @@ class OVirtPower(base.PowerInterface):
         """
         driver_info = _parse_driver_info(task.node)
         vm_name = driver_info['ovirt_vm_name']
-        vm = _getvm(driver_info)
-        try:
-            if target_state == states.POWER_OFF:
-                vm.stop()
-            elif target_state == states.POWER_ON:
-                vm.start()
-            elif target_state == states.REBOOT:
-                status = vm.get().status.value
-                if status == 'down':
+        with _getvm(driver_info) as vm:
+            try:
+                if target_state == states.POWER_OFF:
+                    vm.stop()
+                elif target_state == states.POWER_ON:
                     vm.start()
+                elif target_state == states.REBOOT:
+                    status = vm.get().status.value
+                    if status == 'down':
+                        vm.start()
+                    else:
+                        vm.reboot()
                 else:
-                    vm.reboot()
-            else:
-                msg = _("'set_power_state' called with invalid power "
-                        "state '%s'") % target_state
-                raise exception.InvalidParameterValue(msg)
-        except sdk.Error as e:
-            LOG.error("Could not change status of VM vm %(name)s "
-                      "got error: %(error)s", {'name': vm_name, 'error': e})
-            raise staging_exception.OVirtError(err=e)
+                    msg = _("'set_power_state' called with invalid power "
+                            "state '%s'") % target_state
+                    raise exception.InvalidParameterValue(msg)
+            except sdk.Error as e:
+                LOG.error("Could not change status of VM vm %(name)s "
+                          "got error: %(error)s",
+                          {'name': vm_name, 'error': e})
+                raise staging_exception.OVirtError(err=e)
 
     @task_manager.require_exclusive_lock
     def reboot(self, task, timeout=None):
@@ -291,8 +301,8 @@ class OVirtManagement(base.ManagementInterface):
             oVirt operation.
         """
         driver_info = _parse_driver_info(task.node)
-        vm = _getvm(driver_info)
-        boot_dev = vm.os.boot[0].get_dev()
+        with _getvm(driver_info) as vm:
+            boot_dev = vm.os.boot[0].get_dev()
         persistent = True
         ironic_boot_dev = OVIRT_TO_IRONIC_DEVICE_MAPPING.get(boot_dev)
         if not ironic_boot_dev:
@@ -324,16 +334,16 @@ class OVirtManagement(base.ManagementInterface):
                 "Invalid boot device %s specified.") % device)
 
         driver_info = _parse_driver_info(task.node)
-        vm = _getvm(driver_info)
-        try:
-            boot = otypes.Boot(devices=[otypes.BootDevice(boot_dev)])
-            bootos = otypes.OperatingSystem(boot=boot)
-            vm.update(otypes.Vm(os=bootos))
-        except sdk.Error as e:
-            LOG.error("Setting boot device failed for node %(node_id)s "
-                      "with error: %(error)s",
-                      {'node_id': task.node.uuid, 'error': e})
-            raise staging_exception.OVirtError(err=e)
+        with _getvm(driver_info) as vm:
+            try:
+                boot = otypes.Boot(devices=[otypes.BootDevice(boot_dev)])
+                bootos = otypes.OperatingSystem(boot=boot)
+                vm.update(otypes.Vm(os=bootos))
+            except sdk.Error as e:
+                LOG.error("Setting boot device failed for node %(node_id)s "
+                          "with error: %(error)s",
+                          {'node_id': task.node.uuid, 'error': e})
+                raise staging_exception.OVirtError(err=e)
 
     def get_sensors_data(self, task):
         """Get sensors data.
