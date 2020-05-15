@@ -63,11 +63,12 @@ pygments_style = 'sphinx'
 # The theme to use for HTML and HTML Help pages.  Major themes that come with
 # Sphinx are currently 'default' and 'sphinxdoc'.
 # html_theme_path = ["."]
-# html_theme = '_theme'
 # html_static_path = ['static']
-
+# html_theme = '_theme'
 # Output file base name for HTML help builder.
 htmlhelp_basename = '%sdoc' % project
+
+latex_use_xindy = False
 
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass
