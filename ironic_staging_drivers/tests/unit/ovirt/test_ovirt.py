@@ -61,28 +61,31 @@ class OVirtDriverTestCase(db_base.DbTestCase):
         self.node['driver_info']['ovirt_address'] = u'127.0.0.1'
         driver_info = ovirt_power._parse_driver_info(self.node)
 
-        ovirt_power._getvm(driver_info)
-        ovirt_power.sdk.Connection.assert_called_with(
-            ca_file=None, insecure='False', password='changeme',
-            url=b'https://127.0.0.1/ovirt-engine/api',
-            username='jhendrix@internal'
-        )
+        with ovirt_power._getvm(driver_info):
+            ovirt_power.sdk.Connection.assert_called_with(
+                ca_file=None, insecure='False', password='changeme',
+                url=b'https://127.0.0.1/ovirt-engine/api',
+                username='jhendrix@internal'
+            )
         url = ovirt_power.sdk.Connection.mock_calls[0][-1]['url']
         self.assertIsInstance(url, bytes)
+
+        ovirt_power.sdk.Connection.return_value.close.assert_called()
 
     @mock.patch.object(ovirt_power, "sdk", create=True)
     def test_getvm_unicode(self, sdk):
         self.node['driver_info']['ovirt_address'] = u'host\u20141'
         driver_info = ovirt_power._parse_driver_info(self.node)
 
-        ovirt_power._getvm(driver_info)
-        ovirt_power.sdk.Connection.assert_called_with(
-            ca_file=None, insecure='False', password='changeme',
-            url=u'https://host\u20141/ovirt-engine/api',
-            username='jhendrix@internal'
-        )
+        with ovirt_power._getvm(driver_info):
+            ovirt_power.sdk.Connection.assert_called_with(
+                ca_file=None, insecure='False', password='changeme',
+                url=u'https://host\u20141/ovirt-engine/api',
+                username='jhendrix@internal'
+            )
         url = ovirt_power.sdk.Connection.mock_calls[0][-1]['url']
         self.assertIsInstance(url, str)
+        ovirt_power.sdk.Connection.return_value.close.assert_called()
 
     def test_get_properties(self):
         expected = list(ovirt_power.PROPERTIES.keys())
@@ -137,18 +140,28 @@ class OVirtDriverTestCase(db_base.DbTestCase):
             mock_power.assert_called_once_with(task.driver.management, task,
                                                boot_devices.DISK)
 
-    @mock.patch.object(ovirt_power, '_getvm')
-    def test_set_reboot_when_down(self, mock_vm):
-        mock_vm.return_value.get.return_value.status.value = 'down'
+    @mock.patch.object(ovirt_power, "sdk", create=True)
+    def test_set_reboot_when_down(self, sdk):
+        vm = mock.Mock()
+        vm.get.return_value.status.value = 'down'
+        conn = sdk.Connection.return_value
+        vms_service = conn.system_service.return_value.vms_service.return_value
+        vms_service.vm_service.return_value = vm
 
         with task_manager.acquire(self.context, self.node.uuid) as task:
             task.driver.power.reboot(task)
-            mock_vm.return_value.start.assert_called_once()
+        vm.start.assert_called_once()
+        conn.close.assert_called()
 
-    @mock.patch.object(ovirt_power, '_getvm')
-    def test_set_reboot_when_up(self, mock_vm):
-        mock_vm.return_value.get.return_value.status.value = 'up'
+    @mock.patch.object(ovirt_power, "sdk", create=True)
+    def test_set_reboot_when_up(self, sdk):
+        vm = mock.Mock()
+        vm.get.return_value.status.value = 'up'
+        conn = sdk.Connection.return_value
+        vms_service = conn.system_service.return_value.vms_service.return_value
+        vms_service.vm_service.return_value = vm
 
         with task_manager.acquire(self.context, self.node.uuid) as task:
             task.driver.power.reboot(task)
-            mock_vm.return_value.reboot.assert_called_once()
+        vm.reboot.assert_called_once()
+        conn.close.assert_called()
