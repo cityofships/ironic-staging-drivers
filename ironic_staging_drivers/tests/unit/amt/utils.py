@@ -13,11 +13,11 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+from unittest import mock
 from xml.etree import ElementTree
 
 from ironic.tests.unit.db import base as db_base
 from ironic.tests.unit.objects import utils as obj_utils
-import mock
 
 
 def get_test_amt_info():

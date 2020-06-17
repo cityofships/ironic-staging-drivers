@@ -23,8 +23,8 @@ respective external libraries' actually being present.
 
 import importlib
 import sys
+from unittest import mock
 
-import mock
 from oslo_utils import importutils
 
 from ironic_staging_drivers.tests.unit.amt import pywsman_mocks_specs

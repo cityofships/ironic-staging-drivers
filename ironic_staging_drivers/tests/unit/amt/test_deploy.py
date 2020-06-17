@@ -13,11 +13,12 @@
 
 """Test class for AMT Deploy methods."""
 
+from unittest import mock
+
 from ironic.common import boot_devices
 from ironic.common import states
 from ironic.conductor import task_manager
 from ironic.drivers.modules import iscsi_deploy
-import mock
 
 from ironic_staging_drivers.amt import management as amt_mgmt
 from ironic_staging_drivers.tests.unit.amt import utils as test_utils

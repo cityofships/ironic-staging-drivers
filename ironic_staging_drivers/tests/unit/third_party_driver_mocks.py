@@ -27,8 +27,8 @@ Current list of mocked libraries:
 
 import importlib
 import sys
+from unittest import mock
 
-import mock
 from oslo_utils import importutils
 
 from ironic_staging_drivers.tests.unit import third_party_driver_mock_specs \

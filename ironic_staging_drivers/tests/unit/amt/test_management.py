@@ -15,10 +15,11 @@
 Test class for AMT ManagementInterface
 """
 
+from unittest import mock
+
 from ironic.common import boot_devices
 from ironic.common import exception as ironic_exception
 from ironic.conductor import task_manager
-import mock
 from oslo_config import cfg
 
 from ironic_staging_drivers.amt import common as amt_common

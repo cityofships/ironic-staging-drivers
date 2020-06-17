@@ -16,6 +16,7 @@
 """Test class for Ironic libvirt driver."""
 
 import tempfile
+from unittest import mock
 
 from ironic.common import boot_devices
 from ironic.common import exception
@@ -24,7 +25,6 @@ from ironic.conductor import task_manager
 from ironic.drivers import utils as driver_utils
 from ironic.tests.unit.db import base as db_base
 from ironic.tests.unit.objects import utils as obj_utils
-import mock
 
 from ironic_staging_drivers.common import exception as isd_exc
 from ironic_staging_drivers.libvirt import power

@@ -17,6 +17,7 @@
 
 import socket
 import time
+from unittest import mock
 
 from ironic.common import exception as ironic_exception
 from ironic.common import states
@@ -24,7 +25,6 @@ from ironic.conductor import task_manager
 from ironic.drivers.modules import fake
 from ironic.tests.unit.db import base as db_base
 from ironic.tests.unit.objects import utils as obj_utils
-import mock
 from oslo_utils import uuidutils
 
 from ironic_staging_drivers.common import exception

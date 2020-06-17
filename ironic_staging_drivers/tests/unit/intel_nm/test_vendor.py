@@ -15,6 +15,7 @@ Tests for Intel NM vendor interface
 """
 
 import os
+from unittest import mock
 
 from ironic.common import exception
 from ironic.conductor import task_manager
@@ -22,7 +23,6 @@ from ironic.drivers.modules import ipmitool
 from ironic.tests.unit.db import base as db_base
 from ironic.tests.unit.objects import utils as obj_utils
 from ironic_lib import utils as ironic_utils
-import mock
 from oslo_config import cfg
 
 from ironic_staging_drivers.intel_nm import nm_commands

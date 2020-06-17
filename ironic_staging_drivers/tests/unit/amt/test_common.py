@@ -14,12 +14,13 @@
 """
 Test class for AMT Common
 """
+
 import time
+from unittest import mock
 
 from ironic.common import exception as ironic_exception
 from ironic.common import utils
 from ironic.tests import base
-import mock
 from oslo_concurrency import processutils
 from oslo_config import cfg
 

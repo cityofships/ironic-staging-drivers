@@ -14,13 +14,13 @@
 """Test class for oVirt driver module."""
 
 import time
+from unittest import mock
 
 from ironic.common import boot_devices
 from ironic.common import states
 from ironic.conductor import task_manager
 from ironic.tests.unit.db import base as db_base
 from ironic.tests.unit.objects import utils as obj_utils
-import mock
 
 from ironic_staging_drivers.ovirt import ovirt as ovirt_power
 
