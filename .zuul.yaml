@@ -18,6 +18,8 @@
         IRONIC_DEFAULT_DEPLOY_INTERFACE: ""
       devstack_plugins:
         ironic-staging-drivers: https://opendev.org/x/ironic-staging-drivers
+      devstack_services:
+        dstat: false
 
 - project:
     vars:
