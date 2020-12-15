@@ -26,7 +26,6 @@
       rtd_webhook_id: '44747'
     templates:
       - openstack-python3-wallaby-jobs
-      - openstack-lower-constraints-jobs
       - docs-on-readthedocs
       - check-requirements
     check:
