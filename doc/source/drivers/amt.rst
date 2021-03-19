@@ -63,7 +63,7 @@ A short guide follows below:
 
     [DEFAULT]
     enabled_hardware_types = staging-amt,ipmi
-    enabled_deploy_interfaces = staging-amt,iscsi,direct
+    enabled_deploy_interfaces = direct
     enabled_management_interfaces = staging-amt,ipmitool
     enabled_power_interfaces = staging-amt,ipmitool
 

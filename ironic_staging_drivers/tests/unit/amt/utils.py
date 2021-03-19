@@ -90,7 +90,7 @@ class BaseAMTTest(db_base.DbTestCase):
         self.config(enabled_hardware_types=['staging-amt'],
                     enabled_power_interfaces=['staging-amt'],
                     enabled_management_interfaces=['staging-amt'],
-                    enabled_deploy_interfaces=['staging-amt', 'direct'])
+                    enabled_deploy_interfaces=['direct'])
         self.info = get_test_amt_info()
         self.node = obj_utils.create_test_node(
             self.context,

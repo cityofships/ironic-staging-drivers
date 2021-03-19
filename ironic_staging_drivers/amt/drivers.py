@@ -16,7 +16,6 @@
 from ironic.drivers import generic
 from ironic.drivers.modules import agent
 
-from ironic_staging_drivers.amt import deploy as amt_deploy
 from ironic_staging_drivers.amt import management as amt_management
 from ironic_staging_drivers.amt import power as amt_power
 
@@ -30,7 +29,7 @@ class AMTHardware(generic.GenericHardware):
     @property
     def supported_deploy_interfaces(self):
         """List of supported deploy interfaces."""
-        return [amt_deploy.AMTISCSIDeploy, agent.AgentDeploy]
+        return [agent.AgentDeploy]
 
     @property
     def supported_management_interfaces(self):
