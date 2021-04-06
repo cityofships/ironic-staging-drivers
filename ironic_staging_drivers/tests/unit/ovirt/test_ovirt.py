@@ -21,7 +21,9 @@ from ironic.common import states
 from ironic.conductor import task_manager
 from ironic.tests.unit.db import base as db_base
 from ironic.tests.unit.objects import utils as obj_utils
+import testtools
 
+from ironic_staging_drivers.common import exception as staging_exception
 from ironic_staging_drivers.ovirt import ovirt as ovirt_power
 
 
@@ -64,11 +66,11 @@ class OVirtDriverTestCase(db_base.DbTestCase):
         with ovirt_power._getvm(driver_info):
             ovirt_power.sdk.Connection.assert_called_with(
                 ca_file=None, insecure='False', password='changeme',
-                url=b'https://127.0.0.1/ovirt-engine/api',
+                url='https://127.0.0.1/ovirt-engine/api',
                 username='jhendrix@internal'
             )
         url = ovirt_power.sdk.Connection.mock_calls[0][-1]['url']
-        self.assertIsInstance(url, bytes)
+        self.assertIsInstance(url, str)
 
         ovirt_power.sdk.Connection.return_value.close.assert_called()
 
@@ -77,15 +79,10 @@ class OVirtDriverTestCase(db_base.DbTestCase):
         self.node['driver_info']['ovirt_address'] = u'host\u20141'
         driver_info = ovirt_power._parse_driver_info(self.node)
 
-        with ovirt_power._getvm(driver_info):
-            ovirt_power.sdk.Connection.assert_called_with(
-                ca_file=None, insecure='False', password='changeme',
-                url=u'https://host\u20141/ovirt-engine/api',
-                username='jhendrix@internal'
-            )
-        url = ovirt_power.sdk.Connection.mock_calls[0][-1]['url']
-        self.assertIsInstance(url, str)
-        ovirt_power.sdk.Connection.return_value.close.assert_called()
+        with testtools.ExpectedException(staging_exception.OVirtError):
+            with ovirt_power._getvm(driver_info):
+                pass
+        ovirt_power.sdk.Connection.call_count = 0
 
     def test_get_properties(self):
         expected = list(ovirt_power.PROPERTIES.keys())

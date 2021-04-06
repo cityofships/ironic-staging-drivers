@@ -133,20 +133,21 @@ def _getvm(driver_info):
     password = driver_info['ovirt_password']
     insecure = driver_info['ovirt_insecure']
     ca_file = driver_info['ovirt_ca_file']
-    name = str.encode(
-        driver_info['ovirt_vm_name'], encoding='ascii', errors='ignore')
+    name = driver_info['ovirt_vm_name']
     url = "https://%s/ovirt-engine/api" % address
+
     try:
         # pycurl.Curl.setopt doesn't support unicode strings,
-        # attempt to turn `url` into an all-ASCII string;
+        # attempt to turn variables into an all-ASCII string;
         # in Python 3.x setopt accepts bytes as it should.
-        url = str.encode(url, encoding='ascii', errors='strict')
+        str.encode(url, encoding='ascii', errors='strict')
 
     except UnicodeEncodeError:
-        LOG.warning("oVirt URL '%(url)s' contains non-ascii characters, "
-                    "that might cause pycurl to explode "
-                    "momentarily", {'url': url})
-
+        LOG.exception("oVirt SDK does not accept non-ascii "
+                      "characters. A non-ascii character has "
+                      "been provided for: {}".format(url))
+        raise staging_exception.OVirtError("Unicode values "
+                                           "are not valid")
     try:
         connection = sdk.Connection(url=url, username=username,
                                     password=password, insecure=insecure,
