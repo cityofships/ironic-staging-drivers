@@ -10,7 +10,8 @@
       - ^ironic-staging-drivers/tests/.*$
     required-projects:
       - openstack/ironic
-      - openstack/ironic-python-agent-builder
+      - name: openstack/ironic-python-agent-builder
+        override-checkout: stable/wallaby
       - x/ironic-staging-drivers
     vars:
       devstack_localrc:
