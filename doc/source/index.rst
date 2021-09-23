@@ -8,6 +8,7 @@ Contents:
 
    README
    drivers
+   releasing
 
 Indices and tables
 ==================
