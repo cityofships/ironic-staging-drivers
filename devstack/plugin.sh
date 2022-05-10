@@ -28,16 +28,6 @@ function setup_ironic_enabled_interfaces_for {
     ironic_iface_var="IRONIC_ENABLED_${iface_var}_INTERFACES"
     staging_ifs=$($IRONIC_STAGING_LIST_EP_CMD -t ironic.hardware.interfaces.${iface})
 
-    # NOTE(pas-ha) need fake management interface enabled for staging-wol hw type,
-    # and even if WoL is disabled by skips or filters, no harm in enabling it any way
-    if [[ $iface == 'management' ]]; then
-        if [[ -n ${staging_ifs} ]]; then
-            staging_ifs+=",fake"
-        else
-            staging_ifs='fake'
-        fi
-    fi
-
     if [[ -n ${staging_ifs} ]]; then
         iniset $IRONIC_CONF_FILE DEFAULT "enabled_${iface}_interfaces" "${!ironic_iface_var},$staging_ifs"
     fi
@@ -63,7 +53,10 @@ function update_ironic_enabled_drivers {
     # NOTE(pas-ha) find and enable any type of ironic hardware interface
     # registered by ironic-staging-drivers package (minding skips and filters)
     for i in $IRONIC_DRIVER_INTERFACE_TYPES; do
-        setup_ironic_enabled_interfaces_for $i
+        # NOTE(dtantsur): power and management have auto-detected defaults
+        if [[ "$i" != "power" && "$i" != "management" ]]; then
+            setup_ironic_enabled_interfaces_for $i
+        fi
     done
 }
 
